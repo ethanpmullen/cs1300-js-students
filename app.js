@@ -1,6 +1,5 @@
 var corsApiUrl = "https://cors-anywhere.herokuapp.com/";
-// TODO: REPLACE YOUR TOKEN
-var apiToken = "?token=YOUR_TOKEN_HERE";
+var apiToken = "?token=dQllno8-JhNlxb46t9mLJVIJnDFmvNdkafhM3X5td3Q";
 
 // CORS stands for "cross origin resource sharing" -- you'll be making http requests in order
 // DON'T CHANGE THIS: fetches the data from the API endpoint
@@ -24,8 +23,27 @@ const corsPromise = () =>
 corsPromise().then(
   (request) =>
     (request.onload = request.onerror = function () {
-      // TODO: ADD FUNCTION, ETC. FOR WHATEVER YOU WANT TO DO ONCE THE DATA IS RECEIVED
+      handleResponse(request.response);
     })
 );
 
-//// TODO: ADD WHATEVER FUN CONTENT YOU WANT ////
+const handleResponse = (response) => {
+  const plants = JSON.parse(response).data;
+  console.log(plants);
+  const after1753 = plants.filter((plant) => plant.year > 1753);
+  after1753.map(addToDom);
+};
+
+const addToDom = (plant) => {
+  const wrapperDiv = document.createElement("div");
+  wrapperDiv.setAttribute("class", "plant");
+  const plantName = document.createElement("h3");
+  plantName.innerText = plant.common_name;
+  const imageUrl = plant.image_url;
+  const plantImg = document.createElement("img");
+  plantImg.setAttribute("src", imageUrl);
+  plantImg.setAttribute("class", "plant-img");
+  wrapperDiv.appendChild(plantName);
+  wrapperDiv.appendChild(plantImg);
+  document.getElementById("plants").appendChild(wrapperDiv);
+};
